@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class GunScript : MonoBehaviour
 
     //Private
     private float nextTimeToFire = 0f;
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = GameObject.FindGameObjectWithTag(Tags.GameManager).GetComponent<GameManager>();
+    }
 
     void Update()
     {
@@ -31,10 +38,17 @@ public class GunScript : MonoBehaviour
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
             Debug.Log(hit.transform.name); //Displays what object was hit
+            IsTargetHit(hit); 
 
             GameObject impactGameObject = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); //Instantiates impact particle
             Destroy(impactGameObject, 6f); //Destroys impact particle after time
         }
+    }
 
+    private void IsTargetHit(RaycastHit hit)
+    {
+        if (hit.transform.tag == Tags.ENEMY || hit.transform.tag == Tags.PERSON) {
+            gameManager.TargetHit(hit.transform.gameObject);
+        }
     }
 }
