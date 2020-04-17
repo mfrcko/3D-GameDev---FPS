@@ -15,6 +15,13 @@ public class GunScript : MonoBehaviour
     //Private
     private float nextTimeToFire = 0f;
     private GameManager gameManager;
+    private bool singleShoot = false;
+
+    //sounds
+    public SoundManager soundManager;
+    public AudioClip shoot;
+    public AudioClip au;
+
 
     private void Start()
     {
@@ -24,16 +31,31 @@ public class GunScript : MonoBehaviour
     void Update()
     {
         //Shoots with the desired fire rate
-        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        if (Input.GetKeyDown("x"))
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
+            singleShoot = !singleShoot;
+        }
+
+        if (singleShoot && Input.GetButton("Fire1"))
+        {
             Shoot();
         }
+
+        else
+        {
+            if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+            {
+                nextTimeToFire = Time.time + 1f / fireRate;
+                Shoot();
+            }
+        }
+
     }
 
     void Shoot()
     {
         muzzle.Play(); //Plays muzzle particle
+        soundManager.PlaySingle(shoot);
         RaycastHit hit;
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
@@ -48,6 +70,7 @@ public class GunScript : MonoBehaviour
     private void IsTargetHit(RaycastHit hit)
     {
         if (hit.transform.tag == Tags.ENEMY || hit.transform.tag == Tags.PERSON) {
+            soundManager.RandomizeSfx(au);
             gameManager.TargetHit(hit.transform.gameObject);
         }
     }
