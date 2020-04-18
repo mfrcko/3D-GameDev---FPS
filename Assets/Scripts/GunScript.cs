@@ -31,25 +31,12 @@ public class GunScript : MonoBehaviour
     void Update()
     {
         //Shoots with the desired fire rate
-        if (Input.GetKeyDown("x"))
-        {
-            singleShoot = !singleShoot;
-        }
 
-        if (singleShoot && Input.GetButton("Fire1"))
-        {
-            Shoot();
-        }
-
-        else
-        {
             if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
                 Shoot();
             }
-        }
-
     }
 
     void Shoot()
