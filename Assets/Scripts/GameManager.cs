@@ -3,8 +3,6 @@
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private Spawner spawner;
-    [SerializeField]
     private UIManager uiManager;
     private int score;
     private int damage;
@@ -26,7 +24,6 @@ public class GameManager : MonoBehaviour
     private void TargetKilled(GameObject t) {
         score += t.GetComponent<Target>().point;
         Destroy(t);
-        spawner.TargetKilled();
         uiManager.UpdateScore(score);
     }
 
